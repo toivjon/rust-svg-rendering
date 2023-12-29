@@ -1,1 +1,5 @@
+# The default cargo compilation directory.
 /target
+
+# The core SDL2 dynamic link library.
+SDL2.dll
