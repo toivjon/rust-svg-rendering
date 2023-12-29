@@ -19,9 +19,3 @@ Run the application by executing the following command.
 ```console
 cargo run --release
 ```
-
-Run the tests by using the following command.
-
-```console
-cargo test
-```
