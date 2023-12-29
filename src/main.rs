@@ -18,7 +18,10 @@ fn main() {
 
     let svg = "<svg height='400' width='400'><circle cx='200' cy='200' r='160' stroke='white' stroke-width='4' fill='black'/></svg>";
     let data = sdl2::rwops::RWops::from_bytes(svg.as_bytes()).unwrap();
+
+    // The following function call will actually also rasterize the vector image.
     let surface = unsafe { IMG_LoadSVG_RW(data.raw()) };
+
     let texture = unsafe { SDL_CreateTextureFromSurface(renderer, surface) };
 
     'running: loop {
