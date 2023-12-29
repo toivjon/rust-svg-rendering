@@ -8,7 +8,7 @@ This implementation uses Rust programming language (2021 edition).
 
 See the [official installation instructions](https://www.rust-lang.org/tools/install) to install Rust.
 
-Application also uses SDL2 for common operations.
+Application also uses SDL2 and SDL2_image for common operations.
 
 See the [rust-sdl2 installation instructions](https://github.com/Rust-SDL2/rust-sdl2) about how to use SDL2 libraries.
 

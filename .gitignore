@@ -3,3 +3,6 @@
 
 # The core SDL2 dynamic link library.
 SDL2.dll
+
+# The SDL2 image dynamic link library.
+SDL2_image.dll
