@@ -56,7 +56,6 @@ fn main() {
         canvas.clear();
         canvas.copy(&texture, None, Some(texture_rect)).unwrap();
         canvas.present();
-        ::std::thread::sleep(::std::time::Duration::new(0, 1_000_000_000u32 / 60));
     }
 }
 
