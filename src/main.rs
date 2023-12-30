@@ -21,9 +21,10 @@ fn main() {
     let texture_creator = canvas.texture_creator();
     let mut event_pump = sdl_context.event_pump().unwrap();
 
-    let mut width = 400;
-    let mut height = 400;
-    let mut texture = svg_circle(&texture_creator, width, height);
+    let mut sprite = Sprite {
+        rect: Rect::new(0, 0, 400, 400),
+        texture: svg_circle(&texture_creator, 400, 400),
+    };
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -37,26 +38,34 @@ fn main() {
                     keycode: Some(Keycode::Plus),
                     ..
                 } => {
-                    height += 10;
-                    width += 10;
-                    texture = svg_circle(&texture_creator, height, width);
+                    sprite.rect.set_width(sprite.rect.width() + 10);
+                    sprite.rect.set_height(sprite.rect.height() + 10);
+                    sprite.texture =
+                        svg_circle(&texture_creator, sprite.rect.height(), sprite.rect.width());
                 }
                 Event::KeyDown {
                     keycode: Some(Keycode::Minus),
                     ..
                 } => {
-                    height -= 10;
-                    width -= 10;
-                    texture = svg_circle(&texture_creator, height, width);
+                    sprite.rect.set_width(sprite.rect.width() - 10);
+                    sprite.rect.set_height(sprite.rect.height() - 10);
+                    sprite.texture =
+                        svg_circle(&texture_creator, sprite.rect.height(), sprite.rect.width());
                 }
                 _ => {}
             }
         }
-        let texture_rect = Rect::new(0, 0, width, height);
         canvas.clear();
-        canvas.copy(&texture, None, Some(texture_rect)).unwrap();
+        canvas
+            .copy(&sprite.texture, None, Some(sprite.rect))
+            .unwrap();
         canvas.present();
     }
+}
+
+struct Sprite<'a> {
+    texture: Texture<'a>,
+    rect: Rect,
 }
 
 fn svg_circle(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32) -> Texture {
