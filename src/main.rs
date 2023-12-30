@@ -21,10 +21,7 @@ fn main() {
     let texture_creator = canvas.texture_creator();
     let mut event_pump = sdl_context.event_pump().unwrap();
 
-    let mut sprite = Sprite {
-        rect: Rect::new(0, 0, 400, 400),
-        texture: svg_circle(&texture_creator, 400, 400),
-    };
+    let mut sprite = build_sprite(&texture_creator, 400, 400);
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -38,19 +35,21 @@ fn main() {
                     keycode: Some(Keycode::Plus),
                     ..
                 } => {
-                    sprite.rect.set_width(sprite.rect.width() + 10);
-                    sprite.rect.set_height(sprite.rect.height() + 10);
-                    sprite.texture =
-                        svg_circle(&texture_creator, sprite.rect.height(), sprite.rect.width());
+                    sprite = build_sprite(
+                        &texture_creator,
+                        sprite.rect.width() + 10,
+                        sprite.rect.height() + 10,
+                    );
                 }
                 Event::KeyDown {
                     keycode: Some(Keycode::Minus),
                     ..
                 } => {
-                    sprite.rect.set_width(sprite.rect.width() - 10);
-                    sprite.rect.set_height(sprite.rect.height() - 10);
-                    sprite.texture =
-                        svg_circle(&texture_creator, sprite.rect.height(), sprite.rect.width());
+                    sprite = build_sprite(
+                        &texture_creator,
+                        sprite.rect.width() - 10,
+                        sprite.rect.height() - 10,
+                    );
                 }
                 _ => {}
             }
@@ -68,7 +67,10 @@ struct Sprite<'a> {
     rect: Rect,
 }
 
-fn svg_circle(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32) -> Texture {
+fn build_sprite(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32) -> Sprite {
     let svg = format!("<svg height='{}' width='{}' viewBox='0 0 400 400'><circle cx='200' cy='200' r='160' stroke='white' stroke-width='4' fill='black'/></svg>", h, w);
-    texture_creator.load_texture_bytes(svg.as_bytes()).unwrap()
+    Sprite {
+        texture: texture_creator.load_texture_bytes(svg.as_bytes()).unwrap(),
+        rect: Rect::new(0, 0, h, w),
+    }
 }
