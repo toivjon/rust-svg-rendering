@@ -52,7 +52,7 @@ fn main() {
                 _ => {}
             }
         }
-        let texture_rect = Rect::new(0, 0, width as u32, height as u32);
+        let texture_rect = Rect::new(0, 0, width, height);
         canvas.clear();
         canvas.copy(&texture, None, Some(texture_rect)).unwrap();
         canvas.present();
@@ -60,7 +60,7 @@ fn main() {
     }
 }
 
-fn svg_circle(texture_creator: &TextureCreator<WindowContext>, h: i32, w: i32) -> Texture {
+fn svg_circle(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32) -> Texture {
     let svg = format!("<svg height='{}' width='{}' viewBox='0 0 400 400'><circle cx='200' cy='200' r='160' stroke='white' stroke-width='4' fill='black'/></svg>", h, w);
     texture_creator.load_texture_bytes(svg.as_bytes()).unwrap()
 }
