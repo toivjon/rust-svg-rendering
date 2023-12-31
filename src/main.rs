@@ -1,3 +1,4 @@
+use regex::Regex;
 use sdl2::{
     event::Event,
     image::{InitFlag, LoadTexture},
@@ -68,9 +69,24 @@ struct Sprite<'a> {
 }
 
 fn build_sprite(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32) -> Sprite {
-    let svg = format!("<svg height='{}' width='{}' viewBox='0 0 400 400'><circle cx='200' cy='200' r='160' stroke='white' stroke-width='4' fill='black'/></svg>", h, w);
+    // TODO load this string from a file...
+    let svg = "<svg height='400' width='400' viewBox='0 0 400 400'><circle cx='200' cy='200' r='160' stroke='white' stroke-width='4' fill='black'/></svg>";
+
+    // TODO handle errors from these patterns and check whether these could be static? ... also fix to match only to svg element.
+    let w_pattern = Regex::new(r"(<svg.* width=')(?:[0-9]+)('.*)").unwrap(); // TODO error handling
+    let h_pattern = Regex::new(r"(<svg.* height=')(?:[0-9]+)('.*)").unwrap(); // TODO error handling
+
+    let replace_w = String::from("${1}") + w.to_string().as_str() + "${2}";
+    let replace_h = String::from("${1}") + w.to_string().as_str() + "${2}";
+
+    // TODO Check how to handle these 'Cow' values.
+    let mut modified_svg = w_pattern.replacen(svg, 1, replace_w).to_string();
+    modified_svg = h_pattern.replacen(&modified_svg, 1, replace_h).to_string();
+
     Sprite {
-        texture: texture_creator.load_texture_bytes(svg.as_bytes()).unwrap(),
+        texture: texture_creator
+            .load_texture_bytes(modified_svg.as_bytes())
+            .unwrap(),
         rect: Rect::new(0, 0, h, w),
     }
 }
