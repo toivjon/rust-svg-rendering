@@ -81,12 +81,13 @@ fn build_sprite(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32)
     let h_regex =
         H_REGEX.get_or_init(|| Regex::new(r#"(<svg[^>]*height=["'])(?:[0-9]+)"#).unwrap());
 
-    let replace_w = format!("${{1}}{}", w);
-    let replace_h = format!("${{1}}{}", h);
-
-    // TODO Check how to handle these 'Cow' values.
-    svg = w_regex.replacen(&svg, 1, replace_w).to_string();
-    svg = h_regex.replacen(&svg, 1, replace_h).to_string();
+    // Assign the given height and width to target SVG root element.
+    svg = w_regex
+        .replacen(&svg, 1, format!("${{1}}{}", w))
+        .to_string();
+    svg = h_regex
+        .replacen(&svg, 1, format!("${{1}}{}", h))
+        .to_string();
 
     Sprite {
         texture: texture_creator.load_texture_bytes(svg.as_bytes()).unwrap(),
