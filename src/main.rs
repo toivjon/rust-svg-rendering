@@ -72,7 +72,7 @@ struct Sprite<'a> {
 
 fn build_sprite(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32) -> Sprite {
     // Load the actual SVG data from an external file.
-    let svg = fs::read_to_string("test.svg").unwrap();
+    let mut svg = fs::read_to_string("test.svg").unwrap();
 
     // Lazily initialize static regexes for width and height.
     static W_REGEX: OnceLock<Regex> = OnceLock::new();
@@ -85,13 +85,11 @@ fn build_sprite(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32)
     let replace_h = format!("${{1}}{}", h);
 
     // TODO Check how to handle these 'Cow' values.
-    let mut modified_svg = w_regex.replacen(&svg, 1, replace_w).to_string();
-    modified_svg = h_regex.replacen(&modified_svg, 1, replace_h).to_string();
+    svg = w_regex.replacen(&svg, 1, replace_w).to_string();
+    svg = h_regex.replacen(&svg, 1, replace_h).to_string();
 
     Sprite {
-        texture: texture_creator
-            .load_texture_bytes(modified_svg.as_bytes())
-            .unwrap(),
+        texture: texture_creator.load_texture_bytes(svg.as_bytes()).unwrap(),
         rect: Rect::new(0, 0, h, w),
     }
 }
