@@ -81,8 +81,8 @@ fn build_sprite(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32)
     let h_regex =
         H_REGEX.get_or_init(|| Regex::new(r#"(<svg[^>]*height=["'])(?:[0-9]+)"#).unwrap());
 
-    let replace_w = String::from("${1}") + w.to_string().as_str();
-    let replace_h = String::from("${1}") + w.to_string().as_str();
+    let replace_w = format!("${{1}}{}", w);
+    let replace_h = format!("${{1}}{}", h);
 
     // TODO Check how to handle these 'Cow' values.
     let mut modified_svg = w_regex.replacen(&svg, 1, replace_w).to_string();
