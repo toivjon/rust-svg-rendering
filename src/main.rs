@@ -71,7 +71,7 @@ struct Sprite<'a> {
 }
 
 fn build_sprite(texture_creator: &TextureCreator<WindowContext>, h: u32, w: u32) -> Sprite {
-    // Lazily initialize regex for width and height.
+    // Lazily initialize static regexes for width and height.
     static W_REGEX: OnceLock<Regex> = OnceLock::new();
     static H_REGEX: OnceLock<Regex> = OnceLock::new();
     let w_regex = W_REGEX.get_or_init(|| Regex::new(r"(<svg[^>]*width=')(?:[0-9]+)").unwrap());
